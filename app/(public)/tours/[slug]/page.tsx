@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { TourGallery } from '@/components/tours/TourGallery';
 import { VideoEmbed } from '@/components/shared/VideoEmbed';
+import { TourSidebar } from '@/components/tours/TourSidebar';
 import { formatPrice } from '@/lib/utils';
 import { Calendar, Users, MapPin, Check, X } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -19,7 +20,7 @@ export async function generateStaticParams() {
     select: { slug: true },
   });
 
-  return tours.map((tour) => ({
+  return tours.map((tour: { slug: string }) => ({
     slug: tour.slug,
   }));
 }
@@ -116,7 +117,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
               <div>
                 <h2 className="text-2xl font-bold mb-4">Puntos Destacados</h2>
                 <ul className="space-y-2">
-                  {highlights.map((highlight, index) => (
+                  {highlights.map((highlight: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
                       <span className="text-gray-700">{String(highlight)}</span>
@@ -132,7 +133,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                 <div>
                   <h3 className="text-xl font-bold mb-3 text-green-600">Qué Incluye</h3>
                   <ul className="space-y-2">
-                    {included.map((item, index) => (
+                    {included.map((item: string, index: number) => (
                       <li key={index} className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-green-600 mt-0.5" />
                         <span className="text-sm text-gray-700">{String(item)}</span>
@@ -146,7 +147,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                 <div>
                   <h3 className="text-xl font-bold mb-3 text-red-600">No Incluye</h3>
                   <ul className="space-y-2">
-                    {notIncluded.map((item, index) => (
+                    {notIncluded.map((item: string, index: number) => (
                       <li key={index} className="flex items-start gap-2">
                         <X className="w-4 h-4 text-red-600 mt-0.5" />
                         <span className="text-sm text-gray-700">{String(item)}</span>
@@ -168,34 +169,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-white border border-gray-200 rounded-lg p-6 shadow-lg">
-              <div className="mb-6">
-                <p className="text-sm text-gray-600 mb-1">Desde</p>
-                <p className="text-4xl font-bold text-primary-600">
-                  {formatPrice(Number(tour.price), tour.currency)}
-                </p>
-                <p className="text-sm text-gray-500">por persona</p>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Calendar className="w-5 h-5" />
-                  <span>{tour.duration} días</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-700">
-                  <Users className="w-5 h-5" />
-                  <span>Hasta {tour.maxGuests} personas</span>
-                </div>
-              </div>
-
-              <button className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors mb-3">
-                Consultar Disponibilidad
-              </button>
-
-              <button className="w-full py-3 border border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
-                Solicitar Información
-              </button>
-            </div>
+            <TourSidebar tour={tour} />
           </div>
         </div>
       </div>

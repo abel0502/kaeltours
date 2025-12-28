@@ -29,5 +29,11 @@ y me gustaría obtener más información sobre disponibilidad y formas de pago.
     window.open(whatsappUrl, '_blank');
   };
 
-  return { sendMessage };
+  const openWhatsApp = (message: string) => {
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  return { sendMessage, openWhatsApp };
 }
