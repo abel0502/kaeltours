@@ -46,7 +46,7 @@ export function Navbar() {
               </Link>
             ))}
             <Link
-              href="/admin/dashboard"
+              href="/dashboard"
               className="px-5 py-2.5 bg-white text-primary-700 rounded-lg hover:bg-primary-50 transition-all font-semibold shadow-md hover:shadow-xl transform hover:scale-105"
             >
               Admin

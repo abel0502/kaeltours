@@ -17,7 +17,7 @@ export default async function ToursAdminPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Tours</h1>
-        <Link href="/admin/tours/new">
+        <Link href="/manage-tours/new">
           <Button>
             <Plus className="w-4 h-4 mr-2" />
             Crear Tour
@@ -74,7 +74,7 @@ export default async function ToursAdminPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <Link
-                    href={`/admin/tours/${tour.id}/edit`}
+                    href={`/manage-tours/${tour.id}/edit`}
                     className="text-primary-600 hover:text-primary-900 mr-4"
                   >
                     Editar

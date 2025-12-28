@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
-  const isAdminRoute = req.nextUrl.pathname.startsWith('/admin');
+  const isAdminRoute = req.nextUrl.pathname.startsWith('/dashboard') || req.nextUrl.pathname.startsWith('/manage-tours');
   const isApiAdminRoute = req.nextUrl.pathname.startsWith('/api/admin');
 
   if ((isAdminRoute || isApiAdminRoute) && !isLoggedIn) {
@@ -14,5 +14,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ['/(admin|api/admin)/:path*'],
+  matcher: ['/(dashboard|manage-tours|api/admin)/:path*'],
 };

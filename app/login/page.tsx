@@ -28,7 +28,7 @@ export default function LoginPage() {
       if (result?.error) {
         setError('Credenciales inválidas');
       } else {
-        router.push('/admin/dashboard');
+        router.push('/dashboard');
         router.refresh();
       }
     } catch (error) {

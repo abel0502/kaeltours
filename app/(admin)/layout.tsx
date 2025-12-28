@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { signOut } from '@/auth';
-import { LayoutDashboard, Package, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, LogOut, FolderTree, Calendar } from 'lucide-react';
 
 export default async function AdminLayout({
   children,
@@ -15,6 +15,29 @@ export default async function AdminLayout({
     redirect('/login');
   }
 
+  const menuItems = [
+    {
+      href: '/dashboard',
+      icon: LayoutDashboard,
+      label: 'Dashboard',
+    },
+    {
+      href: '/manage-tours',
+      icon: Package,
+      label: 'Tours',
+    },
+    {
+      href: '/categories',
+      icon: FolderTree,
+      label: 'Categorías',
+    },
+    {
+      href: '/reservations',
+      icon: Calendar,
+      label: 'Reservas',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -25,21 +48,19 @@ export default async function AdminLayout({
         </div>
 
         <nav className="px-4 space-y-2">
-          <Link
-            href="/admin/dashboard"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <LayoutDashboard className="w-5 h-5" />
-            <span>Dashboard</span>
-          </Link>
-
-          <Link
-            href="/admin/manage-tours"
-            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <Package className="w-5 h-5" />
-            <span>Tours</span>
-          </Link>
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <Icon className="w-5 h-5" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-4">
