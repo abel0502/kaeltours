@@ -34,7 +34,7 @@ export default async function AdminLayout({
           </Link>
 
           <Link
-            href="/manage-tours"
+            href="/admin/manage-tours"
             className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <Package className="w-5 h-5" />
