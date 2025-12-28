@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  icon        String?
+  tours       Tour[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model Tour {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  description     String   @db.Text
+  destination     String
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+  price           Decimal  @db.Decimal(10, 2)
+  currency        String   @default("USD")
+  featured        Boolean  @default(false)
+  published       Boolean  @default(false)
+  heroImage       String?
+  gallery         Json     @default("[]")
+  videoYoutubeId  String?
+  videoVimeoId    String?
+  duration        Int
+  maxGuests       Int
+  highlights      Json     @default("[]")
+  included        Json     @default("[]")
+  notIncluded     Json     @default("[]")
+  itinerary       Json     @default("[]")
+  seoTitle        String?
+  seoDescription  String?  @db.Text
+  seoKeywords     String?
+  viewCount       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  bookings        Booking[]
+
+  @@index([slug])
+  @@index([published, featured, createdAt])
+  @@index([destination])
+  @@index([price])
+  @@index([categoryId])
+  @@map("tours")
+}
+
+model Hotel {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  description    String   @db.Text
+  location       String
+  categoryId     String?
+  price          Decimal  @db.Decimal(10, 2)
+  currency       String   @default("USD")
+  featured       Boolean  @default(false)
+  published      Boolean  @default(false)
+  heroImage      String?
+  gallery        Json     @default("[]")
+  stars          Int      @default(3)
+  amenities      Json     @default("[]")
+  rooms          Int
+  seoTitle       String?
+  seoDescription String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  bookings       Booking[]
+
+  @@index([slug])
+  @@index([published, featured])
+  @@map("hotels")
+}
+
+model Booking {
+  id             String        @id @default(cuid())
+  tourId         String?
+  tour           Tour?         @relation(fields: [tourId], references: [id])
+  hotelId        String?
+  hotel          Hotel?        @relation(fields: [hotelId], references: [id])
+  customerName   String
+  customerEmail  String
+  whatsappNumber String
+  startDate      DateTime
+  endDate        DateTime?
+  guests         Int
+  totalPrice     Decimal?      @db.Decimal(10, 2)
+  status         BookingStatus @default(PENDING)
+  notes          String?       @db.Text
+  metadata       Json          @default("{}")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([tourId])
+  @@index([hotelId])
+  @@index([status])
+  @@index([startDate])
+  @@map("bookings")
+}
