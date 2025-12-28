@@ -78,27 +78,7 @@ $env:DATABASE_URL=""
    - **Email:** admin@kaeltours.com
    - **Password:** Admin123!
 
-3. Deberías ser redirigido a: `/admin/dashboard`
-
-## 🔧 Troubleshooting
-
-### Error: "Configuration invalid"
-- Verifica que NEXTAUTH_SECRET esté configurado
-- Verifica que NEXTAUTH_URL sea la URL correcta (sin trailing slash)
-
-### Error: "Can't reach database"
-- Verifica que DATABASE_URL esté correcta
-- Verifica que Hostinger tenga Remote MySQL habilitado
-- Verifica que el host permitido sea `%` (cualquier IP)
-
-### Error 404 en /login
-- Fuerza un redeploy
-- Verifica que el build completó correctamente
-
-### Login no funciona (credenciales correctas)
-- Verifica que el seed se ejecutó
-- Verifica NEXTAUTH_SECRET
-- Revisa los logs en Vercel > tu proyecto > Logs
+3. Deberías ser redirigido a: `/dashboard` (NO `/admin/dashboard`)
 
 ## 📊 Verificar que todo funciona
 
@@ -108,5 +88,14 @@ $env:DATABASE_URL=""
 2. Login: `https://tu-url.vercel.app/login`
    - Debería cargar sin errores
 
-3. Dashboard: `https://tu-url.vercel.app/admin/dashboard`
+3. Dashboard: `https://tu-url.vercel.app/dashboard`
    - Debería redirigir a /login si no estás autenticado
+
+4. Tours: `https://tu-url.vercel.app/manage-tours`
+   - Panel de gestión de tours
+
+5. Categorías: `https://tu-url.vercel.app/categories`
+   - Crear/editar categorías
+
+6. Reservas: `https://tu-url.vercel.app/reservations`
+   - Ver y gestionar reservas
