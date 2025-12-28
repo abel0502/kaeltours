@@ -60,10 +60,10 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
     data: { viewCount: { increment: 1 } },
   }).catch(() => {});
 
-  const gallery = Array.isArray(tour.gallery) ? tour.gallery : [];
-  const highlights = Array.isArray(tour.highlights) ? tour.highlights : [];
-  const included = Array.isArray(tour.included) ? tour.included : [];
-  const notIncluded = Array.isArray(tour.notIncluded) ? tour.notIncluded : [];
+  const gallery = Array.isArray(tour.gallery) ? tour.gallery.map(String) : [];
+  const highlights = Array.isArray(tour.highlights) ? tour.highlights.map(String) : [];
+  const included = Array.isArray(tour.included) ? tour.included.map(String) : [];
+  const notIncluded = Array.isArray(tour.notIncluded) ? tour.notIncluded.map(String) : [];
 
   return (
     <div className="min-h-screen bg-white pt-20">
