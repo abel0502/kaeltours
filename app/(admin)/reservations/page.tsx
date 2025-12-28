@@ -2,26 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import { Loader2, Calendar, User, Mail, Phone, DollarSign } from 'lucide-react';
-import type { Reservation, Tour } from '@prisma/client';
+import type { Booking, Tour } from '@prisma/client';
 
-type ReservationWithTour = Reservation & { tour: Tour };
+type BookingWithTour = Booking & { tour: Tour };
 
 export default function ReservationsPage() {
-  const [reservations, setReservations] = useState<ReservationWithTour[]>([]);
+  const [bookings, setBookings] = useState<BookingWithTour[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all');
 
   useEffect(() => {
-    fetchReservations();
+    fetchBookings();
   }, []);
 
-  const fetchReservations = async () => {
+  const fetchBookings = async () => {
     try {
       const res = await fetch('/api/admin/reservations');
       const data = await res.json();
-      setReservations(data.reservations || []);
+      setBookings(data.bookings || []);
     } catch (error) {
-      console.error('Error fetching reservations:', error);
+      console.error('Error fetching bookings:', error);
     } finally {
       setIsLoading(false);
     }
@@ -37,21 +37,21 @@ export default function ReservationsPage() {
 
       if (!res.ok) throw new Error('Error al actualizar reserva');
 
-      await fetchReservations();
+      await fetchBookings();
     } catch (error) {
       alert('Error al actualizar la reserva');
     }
   };
 
-  const filteredReservations = reservations.filter((r) =>
-    filter === 'all' ? true : r.status === filter
+  const filteredBookings = bookings.filter((r) =>
+    filter === 'all' ? true : r.status.toLowerCase() === filter
   );
 
   const stats = {
-    total: reservations.length,
-    pending: reservations.filter((r) => r.status === 'pending').length,
-    confirmed: reservations.filter((r) => r.status === 'confirmed').length,
-    cancelled: reservations.filter((r) => r.status === 'cancelled').length,
+    total: bookings.length,
+    pending: bookings.filter((r) => r.status === 'PENDING').length,
+    confirmed: bookings.filter((r) => r.status === 'CONFIRMED').length,
+    cancelled: bookings.filter((r) => r.status === 'CANCELLED').length,
   };
 
   if (isLoading) {
@@ -136,48 +136,48 @@ export default function ReservationsPage() {
 
       {/* Lista de Reservas */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {filteredReservations.length === 0 ? (
+        {filteredBookings.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             No hay reservas con este filtro.
           </div>
         ) : (
           <div className="divide-y divide-gray-200">
-            {filteredReservations.map((reservation) => (
-              <div key={reservation.id} className="p-6 hover:bg-gray-50 transition-colors">
+            {filteredBookings.map((booking) => (
+              <div key={booking.id} className="p-6 hover:bg-gray-50 transition-colors">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {reservation.tour.title}
+                      {booking.tour?.title || 'Tour no disponible'}
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                       <div className="flex items-center gap-2 text-gray-600">
                         <User className="w-4 h-4" />
-                        <span>{reservation.guestName}</span>
+                        <span>{booking.customerName}</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
                         <Mail className="w-4 h-4" />
-                        <span>{reservation.guestEmail}</span>
+                        <span>{booking.customerEmail}</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
                         <Phone className="w-4 h-4" />
-                        <span>{reservation.guestPhone}</span>
+                        <span>{booking.whatsappNumber}</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
                         <Calendar className="w-4 h-4" />
-                        <span>{new Date(reservation.tourDate).toLocaleDateString('es-ES')}</span>
+                        <span>{new Date(booking.startDate).toLocaleDateString('es-ES')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-900 font-medium">
                         <DollarSign className="w-4 h-4" />
                         <span>
-                          {reservation.guests} {reservation.guests === 1 ? 'persona' : 'personas'} - ${Number(reservation.totalPrice).toFixed(2)}
+                          {booking.guests} {booking.guests === 1 ? 'persona' : 'personas'} - ${booking.totalPrice ? Number(booking.totalPrice).toFixed(2) : '0.00'}
                         </span>
                       </div>
                     </div>
 
-                    {reservation.notes && (
+                    {booking.notes && (
                       <div className="mt-3 p-3 bg-gray-50 rounded-md text-sm text-gray-700">
-                        <strong>Notas:</strong> {reservation.notes}
+                        <strong>Notas:</strong> {booking.notes}
                       </div>
                     )}
                   </div>
@@ -185,30 +185,30 @@ export default function ReservationsPage() {
                   <div className="ml-6 flex flex-col gap-2">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        reservation.status === 'pending'
+                        booking.status === 'PENDING'
                           ? 'bg-yellow-100 text-yellow-800'
-                          : reservation.status === 'confirmed'
+                          : booking.status === 'CONFIRMED'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
                       }`}
                     >
-                      {reservation.status === 'pending'
+                      {booking.status === 'PENDING'
                         ? 'Pendiente'
-                        : reservation.status === 'confirmed'
+                        : booking.status === 'CONFIRMED'
                         ? 'Confirmada'
                         : 'Cancelada'}
                     </span>
 
-                    {reservation.status === 'pending' && (
+                    {booking.status === 'PENDING' && (
                       <>
                         <button
-                          onClick={() => updateStatus(reservation.id, 'confirmed')}
+                          onClick={() => updateStatus(booking.id, 'CONFIRMED')}
                           className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
                         >
                           Confirmar
                         </button>
                         <button
-                          onClick={() => updateStatus(reservation.id, 'cancelled')}
+                          onClick={() => updateStatus(booking.id, 'CANCELLED')}
                           className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
                         >
                           Cancelar

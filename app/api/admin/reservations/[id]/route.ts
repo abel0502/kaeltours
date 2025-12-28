@@ -15,14 +15,14 @@ export async function PUT(
   try {
     const data = await request.json();
 
-    const reservation = await prisma.reservation.update({
+    const booking = await prisma.booking.update({
       where: { id: params.id },
       data: {
         status: data.status,
       },
     });
 
-    return NextResponse.json({ reservation });
+    return NextResponse.json({ booking });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

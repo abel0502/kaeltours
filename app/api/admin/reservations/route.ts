@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   try {
-    const reservations = await prisma.reservation.findMany({
+    const bookings = await prisma.booking.findMany({
       include: {
         tour: true,
       },
@@ -19,7 +19,7 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ reservations });
+    return NextResponse.json({ bookings });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
