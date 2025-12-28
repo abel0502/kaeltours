@@ -119,7 +119,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                   {highlights.map((highlight, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{highlight}</span>
+                      <span className="text-gray-700">{String(highlight)}</span>
                     </li>
                   ))}
                 </ul>
@@ -135,7 +135,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                     {included.map((item, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-green-600 mt-0.5" />
-                        <span className="text-sm text-gray-700">{item}</span>
+                        <span className="text-sm text-gray-700">{String(item)}</span>
                       </li>
                     ))}
                   </ul>
@@ -149,7 +149,7 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
                     {notIncluded.map((item, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <X className="w-4 h-4 text-red-600 mt-0.5" />
-                        <span className="text-sm text-gray-700">{item}</span>
+                        <span className="text-sm text-gray-700">{String(item)}</span>
                       </li>
                     ))}
                   </ul>
